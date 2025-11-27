@@ -34,7 +34,7 @@
 
 **Step 1: 策略选择（selectStrategy函数）**
 - 使用 `STRATEGY_SELECTION_ONLY_PROMPT` 约束LLM
-- 调用LLM返回JSON格式结果：`{ primary, secondary, rationale, analysis }`
+- 调用LLM返回JSON格式结果：`{ primary, rationale, analysis }`
 - 失败时默认回退到BASE策略
 - 接口：`selectStrategy(rawPrompt, context, model, token) → StrategySelectionResult`
 
@@ -55,12 +55,12 @@
 
 | # | 场景 | 用户Prompt特征 | 预期策略 | 验证特征 |
 |---|------|--------------|--------|--------|
-| **1** | 代码性能优化 | 给出代码+性能问题 | `META + COT` | Role框架 + [PLAN]/[EXECUTE] + 推理 |
+| **1** | 代码性能优化 | 给出代码+性能问题 | `META` | Role框架 + [PLAN]/[EXECUTE] + 推理 |
 | **2** | 简单知识查询 | 简短单一问题 | `BASE` | 最小改动 |
 | **3** | 技术方案对比 | 两个选项+维度 | `TOT_SIMPLE` | A/B方案对比+综合决策 |
-| **4** | 代码实现+示例 | 需求+要示例 | `FEWSHOT + META` | 2-3个代码示例+框架 |
+| **4** | 代码实现+示例 | 需求+要示例 | `FEWSHOT` | 2-3个代码示例+框架 |
 | **5** | 大型系统设计 | 复杂多维需求 | `CHAIN` | [PLAN]→[EXECUTE]→[REFINE]→[FINAL] |
-| **6** | 代码质量审查 | 代码+审查要求 | `META + COT` | Role框架 + [PLAN]/[EXECUTE] + 改进 |
+| **6** | 代码质量审查 | 代码+审查要求 | `META` | Role框架 + [PLAN]/[EXECUTE] + 改进 |
 
 ### 3. 系统Prompt设计 (🎯 关键)
 
@@ -99,12 +99,12 @@
 **功能验证**
 - [ ] 能在VS Code Chat面板中调用 @vv
 - [ ] 6个测试用例都返回符合预期的策略
-  - 用例1: 返回 META + COT ✓
+  - 用例1: 返回 META ✓
   - 用例2: 返回 BASE ✓
   - 用例3: 返回 TOT_SIMPLE ✓
-  - 用例4: 返回 FEWSHOT + META ✓
+  - 用例4: 返回 FEWSHOT ✓
   - 用例5: 返回 CHAIN ✓
-  - 用例6: 返回 META + COT ✓
+  - 用例6: 返回 META ✓
 - [ ] 每个增强prompt都包含其策略的关键特征
   - META: 包含 `Role:`、`Objectives:`、`Constraints:`
   - COT: 包含 `[PLAN]`、`[EXECUTE]`、`[REFINE]` 等

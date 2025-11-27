@@ -8,7 +8,6 @@ export interface StrategyTestCase {
 	name: string;
 	userPrompt: string;
 	expectedPrimaryStrategy: string;
-	expectedSecondaryStrategy?: string;
 	expectedCharacteristics: string[];
 	description: string;
 }
@@ -19,8 +18,8 @@ export interface StrategyTestCase {
 export const strategyTestCases: StrategyTestCase[] = [
 	{
 		id: 1,
-		name: '代码性能优化 (META + COT)',
-		userPrompt: `我有一个处理百万级数据的TypeScript函数，现在性能很差。
+		name: '代码性能优化 (META)',
+		userPrompt: `我有一个处理百万级数据的TypeScript函数，现在性能很差.
 代码：
 \`\`\`typescript
 function processData(items: any[]) {
@@ -37,7 +36,6 @@ function processData(items: any[]) {
 \`\`\`
 请帮我识别问题并给出改进方案。`,
 		expectedPrimaryStrategy: 'META',
-		expectedSecondaryStrategy: 'COT',
 		expectedCharacteristics: [
 			'包含 Role: 性能优化专家',
 			'包含 Objectives: 识别瓶颈、提出改进',
@@ -53,7 +51,6 @@ function processData(items: any[]) {
 		name: '简单知识查询 (BASE)',
 		userPrompt: `ES6中Promise有几种状态？`,
 		expectedPrimaryStrategy: 'BASE',
-		expectedSecondaryStrategy: undefined,
 		expectedCharacteristics: [
 			'最小化改动',
 			'接近原始prompt',
@@ -74,7 +71,6 @@ function processData(items: any[]) {
 
 然后给出最终建议。`,
 		expectedPrimaryStrategy: 'TOT_SIMPLE',
-		expectedSecondaryStrategy: undefined,
 		expectedCharacteristics: [
 			'包含方案A（MySQL）的优缺点分析',
 			'包含方案B（PostgreSQL）的优缺点分析',
@@ -87,7 +83,7 @@ function processData(items: any[]) {
 
 	{
 		id: 4,
-		name: '代码实现+示例 (FEWSHOT + META)',
+		name: '代码实现+示例 (FEWSHOT)',
 		userPrompt: `我需要实现一个React组件，要求：
 - 支持异步数据加载
 - 展示加载状态和错误状态
@@ -96,7 +92,6 @@ function processData(items: any[]) {
 
 但我不太确定最佳实践是什么，希望看到几个参考示例。`,
 		expectedPrimaryStrategy: 'FEWSHOT',
-		expectedSecondaryStrategy: 'META',
 		expectedCharacteristics: [
 			'包含 2-3 个完整的React组件示例',
 			'示例展示不同的状态管理方式（useState vs useReducer）',
@@ -119,7 +114,6 @@ function processData(items: any[]) {
 
 请给出完整的架构方案。`,
 		expectedPrimaryStrategy: 'CHAIN',
-		expectedSecondaryStrategy: undefined,
 		expectedCharacteristics: [
 			'包含明确的 [PLAN] 阶段：需求分析、关键指标',
 			'包含 [EXECUTE] 阶段：技术选型、组件设计',
@@ -132,7 +126,7 @@ function processData(items: any[]) {
 
 	{
 		id: 6,
-		name: '代码审查+质量检查 (META + COT)',
+		name: '代码审查+质量检查 (META)',
 		userPrompt: `请对以下Node.js服务的代码进行全面审查：
 
 \`\`\`typescript
@@ -145,7 +139,6 @@ export async function handleUserRequest(req, res) {
 
 需要识别出所有问题（包括安全、性能、最佳实践等）并给出具体改进方案。`,
 		expectedPrimaryStrategy: 'META',
-		expectedSecondaryStrategy: 'COT',
 		expectedCharacteristics: [
 			'包含 Role: 资深代码审查专家',
 			'包含 Objectives: 识别安全、性能、可维护性问题',

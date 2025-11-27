@@ -24,7 +24,6 @@ export interface StrategySelectionResult {
 	userInput: string;
 	selectedStrategy: {
 		primary: StrategyType;
-		secondary?: StrategyType;
 		rationale: string;
 	};
 	llmAnalysis: string;
@@ -38,7 +37,6 @@ export interface EnhancedPromptResult {
 	userInput: string;
 	selectedStrategy: {
 		primary: StrategyType;
-		secondary?: StrategyType;
 		rationale: string;
 	};
 	enhancedPrompt: string;
@@ -164,7 +162,6 @@ async function selectStrategy(
 			userInput: rawPrompt,
 			selectedStrategy: {
 				primary: parsed.primary as StrategyType,
-				secondary: parsed.secondary as StrategyType | undefined,
 				rationale: parsed.rationale || 'No rationale provided'
 			},
 			llmAnalysis: parsed.analysis || 'No analysis provided'
@@ -194,9 +191,7 @@ async function generateEnhancedPromptForStrategy(
 	token: vscode.CancellationToken
 ): Promise<string> {
 	try {
-		const strategyInfo = strategy.selectedStrategy.secondary
-			? `Primary Strategy (主导80%): ${strategy.selectedStrategy.primary}\nSecondary Strategy (辅助20%): ${strategy.selectedStrategy.secondary}`
-			: `Single Strategy: ${strategy.selectedStrategy.primary}`;
+		const strategyInfo = `Strategy: ${strategy.selectedStrategy.primary}`;
 
 		const userMessage = `${PROMPT_ENHANCEMENT_PROMPT}
 
@@ -279,9 +274,6 @@ export function registerCodePilotParticipant(context: vscode.ExtensionContext): 
 			// Display strategy selection
 			stream.markdown(`## ✅ Strategy Selection Result\n\n`);
 			stream.markdown(`**Selected Strategy:** \`${strategySelection.selectedStrategy.primary}\`\n`);
-			if (strategySelection.selectedStrategy.secondary) {
-				stream.markdown(`**Secondary:** \`${strategySelection.selectedStrategy.secondary}\`\n`);
-			}
 			stream.markdown(`\n**Rationale:** ${strategySelection.selectedStrategy.rationale}\n\n`);
 			stream.markdown(`**Analysis:** ${strategySelection.llmAnalysis}\n\n`);
 
